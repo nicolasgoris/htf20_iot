@@ -10,12 +10,9 @@ const help = require('./help'),
 
 router.get('/api/getmonsters', (req, res) => {
   return (async () => {
-    /**
-     * Add code to execute a call to the IoT server.
-     * Keep in mind that if not providing specifications to the url the IoT will answer with all data that is present.
-     * Check out following documentation: https://flexso.eu10.cp.iot.sap/flexso/iot/core/api/v1/doc/swagger#/Devices/getMeasuresByDeviceUsingGET
-     *                                 &  https://blogs.sap.com/2017/12/13/tip-how-to-retrieve-measures-filtered-from-sap-cloud-platform-internet-of-things-for-the-cloud-foundry-environment-postgres-database/
-     */
+    let oneHourAgo = new Date().setHours(new Date().getHours() - 1);
+    let measures = JSON.parse(await getAPI(config.measuresUrl + '?filter=timestamp gt ' + oneHourAgo));
+    res.send(measures);
   })()
     .catch(error => res.send(error));
 })
